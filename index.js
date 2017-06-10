@@ -4,7 +4,7 @@
 
 const BackgroundColor = 0xFCE38A;
 
-var app = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: BackgroundColor});
+let app = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor: BackgroundColor});
 document.body.appendChild(app.view);
 
 const GridWidth = 60;
@@ -13,7 +13,7 @@ const GridStartX = (app.renderer.width - ((GridDelta + GridWidth) * 4 - GridDelt
 const GridStartY = app.renderer.height / 8 * 3;
 const GridFontSize = 28;
 
-var titleStyle = new PIXI.TextStyle({
+let titleStyle = new PIXI.TextStyle({
     fontFamily: 'Arial',
     fontSize: 125,
     fontStyle: 'italic',
@@ -30,14 +30,37 @@ var titleStyle = new PIXI.TextStyle({
     wordWrapWidth: 440
 });
 
-var basicText = new PIXI.Text('2048', titleStyle);
-basicText.anchor.set(0.5);
-basicText.x = app.renderer.width / 2;
-basicText.y = app.renderer.height / 5;
-app.stage.addChild(basicText);
+let titleText = new PIXI.Text('2048', titleStyle);
+titleText.anchor.set(0.5);
+titleText.x = app.renderer.width / 2;
+titleText.y = app.renderer.height / 5;
+app.stage.addChild(titleText);
+
+const ScorePositionY = 20;
+let scoreStyle = new PIXI.TextStyle({
+    fontFamily: 'Arial',
+    fontSize: 25,
+    // fontStyle: 'italic',
+    fill: ['#F38181'], // gradient
+    // fontWeight: 'bold',
+    // stroke: '#222831',
+    // strokeThickness: 5,
+    // dropShadow: true,
+    // dropShadowColor: '#393E46',
+    // dropShadowBlur: 4,
+    // dropShadowAngle: Math.PI / 6,
+    // dropShadowDistance: 0,
+    // wordWrap: true,
+    // wordWrapWidth: 440
+});
+let scoreText = new PIXI.Text('score : ' + score, scoreStyle);
+scoreText.anchor.set(0.5, 0);
+scoreText.x = app.renderer.width / 2;
+scoreText.y = ScorePositionY;
+app.stage.addChild(scoreText);
 
 function getNumberBackgroundColor(number) {
-    var color = {
+    let color = {
         0: 0xf4e542,
         2: 0xebf441,
         4: 0xd6f441,
@@ -45,104 +68,75 @@ function getNumberBackgroundColor(number) {
         16: 0xa0f441,
         32: 0x91f441,
         64: 0x6af441,
-        128: 0x4ff441
+        128: 0x4ff441,
+        256: 0x41f452,
+        512: 0x41f476,
+        1024: 0x41f497,
+        2048: 0x41f4c4,
+        4096: 0x41f4e2
     };
     return color[number];
 }
 
 function drawGridNumber(x, y, number) {
-    var number = new PIXI.Text(number, {fontSize: GridFontSize});
-    number.anchor.set(0.5);
-    number.x = GridStartX + x * (GridWidth + GridDelta) + GridWidth / 2;
-    number.y = GridStartY + y * (GridWidth + GridDelta) + GridWidth / 2;
-    app.stage.addChild(number);
+    let gridNumberText = new PIXI.Text(number, {fontSize: GridFontSize});
+    gridNumberText.anchor.set(0.5);
+    gridNumberText.x = GridStartX + x * (GridWidth + GridDelta) + GridWidth / 2;
+    gridNumberText.y = GridStartY + y * (GridWidth + GridDelta) + GridWidth / 2;
+    app.stage.addChild(gridNumberText);
 }
 
-function drawCellWithColor(x, y, color) {
-    var graphics = new PIXI.Graphics();
-    graphics.beginFill(color, 1);
-    graphics.drawRect(GridStartX + x * (GridWidth + GridDelta), GridStartY + y * (GridWidth + GridDelta), GridWidth, GridWidth);
-    app.stage.addChild(graphics);
+function drawGridWithColor(x, y, color) {
+    let gridGraphics = new PIXI.Graphics();
+    gridGraphics.beginFill(color, 1);
+    gridGraphics.drawRect(GridStartX + x * (GridWidth + GridDelta), GridStartY + y * (GridWidth + GridDelta), GridWidth, GridWidth);
+    app.stage.addChild(gridGraphics);
 }
 
-function drawCell(x, y) {
+function drawGrid(x, y) {
     if (grid[x][y] === 0) {
-        drawCellWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
+        drawGridWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
     } else {
-        drawCellWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
+        drawGridWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
         drawGridNumber(x, y, grid[x][y]);
     }
 }
 
-function drawScore() {
-    var graphics = new PIXI.Graphics();
-    graphics.beginFill(BackgroundColor, 1);
-    const width = 150;
-    const height = 25;
-    const y = 20;
-
-    graphics.drawRect((app.renderer.width - width) / 2, y, width, height);
-    app.stage.addChild(graphics);
-
-    var scoreStyle = new PIXI.TextStyle({
-        fontFamily: 'Arial',
-        fontSize: 25,
-        // fontStyle: 'italic',
-        fill: ['#F38181'], // gradient
-        // fontWeight: 'bold',
-        // stroke: '#222831',
-        // strokeThickness: 5,
-        // dropShadow: true,
-        // dropShadowColor: '#393E46',
-        // dropShadowBlur: 4,
-        // dropShadowAngle: Math.PI / 6,
-        // dropShadowDistance: 0,
-        // wordWrap: true,
-        // wordWrapWidth: 440
-    });
-
-    var scoreText = new PIXI.Text('score : ' + score, scoreStyle);
-    scoreText.anchor.set(0.5, 0);
-    scoreText.x = app.renderer.width / 2;
-    scoreText.y = y;
-    app.stage.addChild(scoreText);
-}
-
 function flushGame() {
-    for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 4; j++) {
-            drawCell(i, j);
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            drawGrid(i, j);
         }
     }
-    drawScore();
+    scoreText.text = 'score : '+score;
 }
 
 flushGame();
 
-function MoveCells(direction) {
-    var isMove;
+function MoveGrids(direction) {
+    let isMove;
     switch (direction) {
         case 'Right':
-            if (moveCellToRight())
+            if (moveGridsToRight())
                 generateRandomGrid();
             break;
         case 'Left':
             rotateArray(2);
-            isMove = moveCellToRight();
+            isMove = moveGridsToRight();
             rotateArray(2);
             if (isMove)
                 generateRandomGrid();
             break;
         case 'Up':
             rotateArray(3);
-            isMove = moveCellToRight();
+            isMove = moveGridsToRight();
             rotateArray(1);
             if (isMove)
                 generateRandomGrid();
             break;
         case 'Down':
             rotateArray(1);
-            isMove = moveCellToRight();
+            isMove = moveGridsToRight();
             rotateArray(3);
             if (isMove)
                 generateRandomGrid();
@@ -151,19 +145,18 @@ function MoveCells(direction) {
     flushGame();
 }
 
-
 document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowRight') {
-        MoveCells('Right');
+        MoveGrids('Right');
     }
     if (event.key === 'ArrowLeft') {
-        MoveCells('Left');
+        MoveGrids('Left');
     }
     if (event.key === 'ArrowUp') {
-        MoveCells('Up');
+        MoveGrids('Up');
     }
     if (event.key === 'ArrowDown') {
-        MoveCells('Down');
+        MoveGrids('Down');
     }
 
     if (isGameOver()) {
@@ -171,23 +164,21 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
-var hammertime = new Hammer.Manager(document, {
+let hammertime = new Hammer.Manager(document, {
     recognizers: [
         [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
     ]
 });
 
-hammertime.on('swiperight', function() {
-    MoveCells('Right');
+hammertime.on('swiperight', function () {
+    MoveGrids('Right');
 });
 hammertime.on('swipeup', function () {
-    MoveCells('Up');
+    MoveGrids('Up');
 });
 hammertime.on('swipeleft', function () {
-    MoveCells('Left');
+    MoveGrids('Left');
 });
 hammertime.on('swipedown', function () {
-    MoveCells('Down');
+    MoveGrids('Down');
 });
-
-
