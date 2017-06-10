@@ -15,6 +15,7 @@ for (var i = 0; i < 4; i++) {
 }
 
 function moveCellToRight() {
+    var isMove = false;
     for (var i = 0; i < 4; i++) {
         var cellsNextState = [];
         for (var j = 3; j >= 0; j--) {
@@ -32,12 +33,17 @@ function moveCellToRight() {
         }
 
         for (var j = 0; j < 4; j++) {
-            if (j < cellsNextState.length)
-                grid[3 - j][i] = cellsNextState[j];
+            if (j < cellsNextState.length) {
+                if (grid[3 - j][i] !== cellsNextState[j]) {
+                    grid[3 - j][i] = cellsNextState[j];
+                    isMove = true;
+                }
+            }
             else
                 grid[3 - j][i] = 0;
         }
     }
+    return isMove;
 }
 
 function rotateArray(rotateCount = 1) {

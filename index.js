@@ -77,12 +77,34 @@ function drawCell(x, y) {
 function drawScore() {
     var graphics = new PIXI.Graphics();
     graphics.beginFill(BackgroundColor, 1);
-    graphics.drawRect(0, 0, 125, 25);
+    const width = 150;
+    const height = 25;
+    const y = 20;
+
+    graphics.drawRect((app.renderer.width - width) / 2, y, width, height);
     app.stage.addChild(graphics);
 
-    var scoreText = new PIXI.Text('score: ' + score, {fontSize: 20});
-    scoreText.x = 0;
-    scoreText.y = 0;
+    var scoreStyle = new PIXI.TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 25,
+        // fontStyle: 'italic',
+        fill: ['#F38181'], // gradient
+        // fontWeight: 'bold',
+        // stroke: '#222831',
+        // strokeThickness: 5,
+        // dropShadow: true,
+        // dropShadowColor: '#393E46',
+        // dropShadowBlur: 4,
+        // dropShadowAngle: Math.PI / 6,
+        // dropShadowDistance: 0,
+        // wordWrap: true,
+        // wordWrapWidth: 440
+    });
+
+    var scoreText = new PIXI.Text('score : ' + score, scoreStyle);
+    scoreText.anchor.set(0.5, 0);
+    scoreText.x = app.renderer.width / 2;
+    scoreText.y = y;
     app.stage.addChild(scoreText);
 }
 
@@ -99,30 +121,35 @@ flushGame();
 
 
 document.addEventListener('keydown', function (event) {
+    var isMove = false;
     if (event.key === 'ArrowRight') {
-        moveCellToRight();
-        generateRandomGrid();
+        if (moveCellToRight())
+            generateRandomGrid();
         flushGame();
     }
     if (event.key === 'ArrowLeft') {
+
         rotateArray(2);
-        moveCellToRight();
+        isMove = moveCellToRight();
         rotateArray(2);
-        generateRandomGrid();
+        if (isMove)
+            generateRandomGrid();
         flushGame();
     }
     if (event.key === 'ArrowUp') {
         rotateArray(3);
-        moveCellToRight();
+        isMove = moveCellToRight();
         rotateArray(1);
-        generateRandomGrid();
+        if (isMove)
+            generateRandomGrid();
         flushGame();
     }
     if (event.key === 'ArrowDown') {
         rotateArray(1);
-        moveCellToRight();
+        isMove = moveCellToRight();
         rotateArray(3);
-        generateRandomGrid();
+        if (isMove)
+            generateRandomGrid();
         flushGame();
     }
 });
