@@ -31,7 +31,6 @@ var titleStyle = new PIXI.TextStyle({
 });
 
 var basicText = new PIXI.Text('2048', titleStyle);
-
 basicText.anchor.set(0.5);
 basicText.x = app.renderer.width / 2;
 basicText.y = app.renderer.height / 5;
@@ -46,8 +45,22 @@ for (var i = 0; i < 4; i++) {
     }
 }
 
-var grid = [];
-
-for (var i = 0; i < 4; i++) {
-    grid.push([0, 0, 0, 0]);
+for (var i = 0; i < 10; i++) {
+    console.log(generateRandomNumber());
 }
+
+var x = generateRandomNumber();
+var y = generateRandomNumber();
+
+var graphics = new PIXI.Graphics();
+graphics.beginFill(0xffffff, 1);
+graphics.drawRect(GridStartX + x * (GridWidth + GridDelta), GridStartY + y * (GridWidth + GridDelta), GridWidth, GridWidth);
+app.stage.addChild(graphics);
+
+
+var number = new PIXI.Text('2',{fontSize:48});
+number.anchor.set(0.5);
+number.x = GridStartX + x * (GridWidth + GridDelta) + GridWidth / 2;
+number.y = GridStartY + y * (GridWidth + GridDelta) + GridWidth / 2;
+app.stage.addChild(number);
+
