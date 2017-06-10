@@ -119,39 +119,75 @@ function flushGame() {
 
 flushGame();
 
+function MoveCells(direction) {
+    var isMove;
+    switch (direction) {
+        case 'Right':
+            if (moveCellToRight())
+                generateRandomGrid();
+            break;
+        case 'Left':
+            rotateArray(2);
+            isMove = moveCellToRight();
+            rotateArray(2);
+            if (isMove)
+                generateRandomGrid();
+            break;
+        case 'Up':
+            rotateArray(3);
+            isMove = moveCellToRight();
+            rotateArray(1);
+            if (isMove)
+                generateRandomGrid();
+            break;
+        case 'Down':
+            rotateArray(1);
+            isMove = moveCellToRight();
+            rotateArray(3);
+            if (isMove)
+                generateRandomGrid();
+            break;
+    }
+    flushGame();
+}
+
 
 document.addEventListener('keydown', function (event) {
-    var isMove = false;
     if (event.key === 'ArrowRight') {
-        if (moveCellToRight())
-            generateRandomGrid();
-        flushGame();
+        MoveCells('Right');
     }
     if (event.key === 'ArrowLeft') {
-
-        rotateArray(2);
-        isMove = moveCellToRight();
-        rotateArray(2);
-        if (isMove)
-            generateRandomGrid();
-        flushGame();
+        MoveCells('Left');
     }
     if (event.key === 'ArrowUp') {
-        rotateArray(3);
-        isMove = moveCellToRight();
-        rotateArray(1);
-        if (isMove)
-            generateRandomGrid();
-        flushGame();
+        MoveCells('Up');
     }
     if (event.key === 'ArrowDown') {
-        rotateArray(1);
-        isMove = moveCellToRight();
-        rotateArray(3);
-        if (isMove)
-            generateRandomGrid();
-        flushGame();
+        MoveCells('Down');
     }
+
+    if (isGameOver()) {
+        alert('Game Over');
+    }
+});
+
+var hammertime = new Hammer.Manager(document, {
+    recognizers: [
+        [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
+    ]
+});
+
+hammertime.on('swiperight', function() {
+    MoveCells('Right');
+});
+hammertime.on('swipeup', function () {
+    MoveCells('Up');
+});
+hammertime.on('swipeleft', function () {
+    MoveCells('Left');
+});
+hammertime.on('swipedown', function () {
+    MoveCells('Down');
 });
 
 
