@@ -11,8 +11,7 @@ const GridWidth = 60;
 const GridDelta = 10;
 const GridStartX = (app.renderer.width - ((GridDelta + GridWidth) * 4 - GridDelta)) / 2;
 const GridStartY = app.renderer.height / 8 * 3;
-const GridColor = 0x95E1D3;
-const GridFontSize = 48;
+const GridFontSize = 28;
 
 var titleStyle = new PIXI.TextStyle({
     fontFamily: 'Arial',
@@ -75,30 +74,56 @@ function drawCell(x, y) {
     }
 }
 
+function drawScore() {
+    var graphics = new PIXI.Graphics();
+    graphics.beginFill(BackgroundColor, 1);
+    graphics.drawRect(0, 0, 125, 25);
+    app.stage.addChild(graphics);
+
+    var scoreText = new PIXI.Text('score: ' + score, {fontSize: 20});
+    scoreText.x = 0;
+    scoreText.y = 0;
+    app.stage.addChild(scoreText);
+}
+
 function flushGame() {
     for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 4; j++) {
             drawCell(i, j);
         }
     }
+    drawScore();
 }
 
 flushGame();
 
+
 document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowRight') {
-        console.log(event);
         moveCellToRight();
+        generateRandomGrid();
         flushGame();
     }
     if (event.key === 'ArrowLeft') {
-        console.log(event);
+        rotateArray(2);
+        moveCellToRight();
+        rotateArray(2);
+        generateRandomGrid();
+        flushGame();
     }
     if (event.key === 'ArrowUp') {
-        console.log(event);
+        rotateArray(3);
+        moveCellToRight();
+        rotateArray(1);
+        generateRandomGrid();
+        flushGame();
     }
     if (event.key === 'ArrowDown') {
-        console.log(event);
+        rotateArray(1);
+        moveCellToRight();
+        rotateArray(3);
+        generateRandomGrid();
+        flushGame();
     }
 });
 
