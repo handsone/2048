@@ -12,6 +12,7 @@ const GridDelta = 10;
 const GridStartX = (app.renderer.width - ((GridDelta + GridWidth) * 4 - GridDelta)) / 2;
 const GridStartY = app.renderer.height / 8 * 3;
 const GridColor = 0x95E1D3;
+const GridFontSize = 48;
 
 var titleStyle = new PIXI.TextStyle({
     fontFamily: 'Arial',
@@ -36,31 +37,51 @@ basicText.x = app.renderer.width / 2;
 basicText.y = app.renderer.height / 5;
 app.stage.addChild(basicText);
 
-for (var i = 0; i < 4; i++) {
-    for (var j = 0; j < 4; j++) {
-        var graphics = new PIXI.Graphics();
-        graphics.beginFill(GridColor, 1);
-        graphics.drawRect(GridStartX + i * (GridWidth + GridDelta), GridStartY + j * (GridWidth + GridDelta), GridWidth, GridWidth);
-        app.stage.addChild(graphics);
+function drawGridNumber(x, y, number) {
+    var number = new PIXI.Text(number, {fontSize: GridFontSize});
+    number.anchor.set(0.5);
+    number.x = GridStartX + x * (GridWidth + GridDelta) + GridWidth / 2;
+    number.y = GridStartY + y * (GridWidth + GridDelta) + GridWidth / 2;
+    app.stage.addChild(number);
+}
+
+function drawCellWithColor(x, y, color) {
+    var graphics = new PIXI.Graphics();
+    graphics.beginFill(color, 1);
+    graphics.drawRect(GridStartX + x * (GridWidth + GridDelta), GridStartY + y * (GridWidth + GridDelta), GridWidth, GridWidth);
+    app.stage.addChild(graphics);
+}
+
+function drawCell(x, y) {
+    if (grid[x][y] === 0) {
+        drawCellWithColor(x, y, GridColor);
+    } else {
+        drawCellWithColor(x, y, 0xffffff);
+        drawGridNumber(x, y, grid[x][y]);
     }
 }
 
-for (var i = 0; i < 10; i++) {
-    console.log(generateRandomNumber());
+grid[generateRandomNumber()][generateRandomNumber()] = 2;
+
+for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+        drawCell(i, j);
+    }
 }
 
-var x = generateRandomNumber();
-var y = generateRandomNumber();
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowRight') {
+        console.log(event);
+    }
+    if (event.key === 'ArrowLeft') {
+        console.log(event);
+    }
+    if (event.key === 'ArrowUp') {
+        console.log(event);
+    }
+    if (event.key === 'ArrowDown') {
+        console.log(event);
+    }
+});
 
-var graphics = new PIXI.Graphics();
-graphics.beginFill(0xffffff, 1);
-graphics.drawRect(GridStartX + x * (GridWidth + GridDelta), GridStartY + y * (GridWidth + GridDelta), GridWidth, GridWidth);
-app.stage.addChild(graphics);
-
-
-var number = new PIXI.Text('2',{fontSize:48});
-number.anchor.set(0.5);
-number.x = GridStartX + x * (GridWidth + GridDelta) + GridWidth / 2;
-number.y = GridStartY + y * (GridWidth + GridDelta) + GridWidth / 2;
-app.stage.addChild(number);
 
