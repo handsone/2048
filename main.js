@@ -89,17 +89,16 @@ function isGridFull() {
 function isGameOver() {
     var mergeCount = 0;
 
-    if (isGridFull()) {
+    if (!isGridFull()) {
         return false;
     }
 
     for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 4; j++) {
-            if ((grid[i - 1] && grid[i][j] === grid[i - 1][j] ) ||
-                (grid[i + 1] && grid[i][j] === grid[i + 1][j] ) ||
-                (grid[i][j - 1] && grid[i][j] === grid[i][j - 1]) ||
-                (grid[i][j + 1] && grid[i][j] === grid[i][j + 1])
-            ) {
+            if (grid[i][j] === grid[i][j - 1] ||
+                grid[i][j] === grid[i][j + 1] ||
+                (grid[i - 1] && grid[i][j] === grid[i - 1][j]) ||
+                (grid[i + 1] && grid[i][j] === grid[i + 1][j])) {
                 mergeCount++;
                 break;
             }
