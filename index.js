@@ -108,7 +108,10 @@ function flushGame() {
             drawGrid(i, j);
         }
     }
-    scoreText.text = 'score : '+score;
+    scoreText.text = 'score : ' + score;
+    if (isGameOver()) {
+        alert('Your score is ' + score);
+    }
 }
 
 flushGame();
@@ -158,27 +161,23 @@ document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowDown') {
         MoveGrids('Down');
     }
-
-    if (isGameOver()) {
-        alert('Game Over');
-    }
 });
 
-let hammertime = new Hammer.Manager(document, {
+let hammerTime = new Hammer.Manager(document, {
     recognizers: [
         [Hammer.Swipe, {direction: Hammer.DIRECTION_ALL}]
     ]
 });
 
-hammertime.on('swiperight', function () {
+hammerTime.on('swiperight', function () {
     MoveGrids('Right');
 });
-hammertime.on('swipeup', function () {
+hammerTime.on('swipeup', function () {
     MoveGrids('Up');
 });
-hammertime.on('swipeleft', function () {
+hammerTime.on('swipeleft', function () {
     MoveGrids('Left');
 });
-hammertime.on('swipedown', function () {
+hammerTime.on('swipedown', function () {
     MoveGrids('Down');
 });

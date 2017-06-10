@@ -6,17 +6,17 @@ function generateRandomNumber() {
     return Math.floor(Math.random() * 4);
 }
 
+const GridColumnNumber = 4;
+
 var score = 0;
 
 var grid = [];
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < GridColumnNumber; i++) {
     grid.push([0, 0, 0, 0]);
 }
 
 function moveGridsToRight() {
-    let isMove = false;
-
     function mergeGridScore(gridsState) {
         let score = 0;
         for (let i = 0; i < gridsState.length - 1; i++) {
@@ -30,24 +30,26 @@ function moveGridsToRight() {
         return score;
     }
 
-    for (let i = 0; i < 4; i++) {
+    let isMove = false;
+
+    for (let i = 0; i < GridColumnNumber; i++) {
         let gridsNextState = [];
-        for (let j = 3; j >= 0; j--) {
+        for (let j = GridColumnNumber - 1; j >= 0; j--) {
             if (grid[j][i] !== 0) {
                 gridsNextState.push(grid[j][i]);
                 score += mergeGridScore(gridsNextState);
             }
         }
 
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < GridColumnNumber; j++) {
             if (j < gridsNextState.length) {
-                if (grid[3 - j][i] !== gridsNextState[j]) {
-                    grid[3 - j][i] = gridsNextState[j];
+                if (grid[GridColumnNumber - 1 - j][i] !== gridsNextState[j]) {
+                    grid[GridColumnNumber - 1 - j][i] = gridsNextState[j];
                     isMove = true;
                 }
             }
             else
-                grid[3 - j][i] = 0;
+                grid[GridColumnNumber - 1 - j][i] = 0;
         }
     }
     return isMove;
@@ -81,7 +83,7 @@ function generateRandomGrid() {
             grid[x][y] = generateRandomNumberTwoOrFour();
             break;
         }
-    }while (true);
+    } while (true);
 }
 
 function isFullGrids() {
@@ -101,8 +103,8 @@ function isGameOver() {
         return false;
     }
 
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
+    for (let i = 0; i < GridColumnNumber; i++) {
+        for (let j = 0; j < GridColumnNumber; j++) {
             if (grid[i][j] === grid[i][j - 1] ||
                 grid[i][j] === grid[i][j + 1] ||
                 (grid[i - 1] && grid[i][j] === grid[i - 1][j]) ||
