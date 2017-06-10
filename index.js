@@ -37,6 +37,20 @@ basicText.x = app.renderer.width / 2;
 basicText.y = app.renderer.height / 5;
 app.stage.addChild(basicText);
 
+function getNumberBackgroundColor(number) {
+    var color = {
+        0: 0xf4e542,
+        2: 0xebf441,
+        4: 0xd6f441,
+        8: 0xbef441,
+        16: 0xa0f441,
+        32: 0x91f441,
+        64: 0x6af441,
+        128: 0x4ff441
+    };
+    return color[number];
+}
+
 function drawGridNumber(x, y, number) {
     var number = new PIXI.Text(number, {fontSize: GridFontSize});
     number.anchor.set(0.5);
@@ -54,24 +68,28 @@ function drawCellWithColor(x, y, color) {
 
 function drawCell(x, y) {
     if (grid[x][y] === 0) {
-        drawCellWithColor(x, y, GridColor);
+        drawCellWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
     } else {
-        drawCellWithColor(x, y, 0xffffff);
+        drawCellWithColor(x, y, getNumberBackgroundColor(grid[x][y]));
         drawGridNumber(x, y, grid[x][y]);
     }
 }
 
-grid[generateRandomNumber()][generateRandomNumber()] = 2;
-
-for (var i = 0; i < 4; i++) {
-    for (var j = 0; j < 4; j++) {
-        drawCell(i, j);
+function flushGame() {
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 4; j++) {
+            drawCell(i, j);
+        }
     }
 }
+
+flushGame();
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'ArrowRight') {
         console.log(event);
+        moveCellToRight();
+        flushGame();
     }
     if (event.key === 'ArrowLeft') {
         console.log(event);
